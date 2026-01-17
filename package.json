@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "concurrently \"vite\" \"gulp\"",
-    "build": "gulp && tsc && vite build",
+    "build": "npx gulp build && tsc && vite build",
     "preview": "vite preview"
   },
   "devDependencies": {
