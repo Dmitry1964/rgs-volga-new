@@ -1,0 +1,186 @@
+@use "variables";
+@use "sass:math";
+
+@mixin retina {
+  @media (min-resolution: variables.$retina-dpi), (min-resolution: variables.$retina-dppx) {
+    @content;
+  }
+}
+
+@mixin hover {
+  @media (hover: hover) {
+    &:hover:not(.focus-visible) {
+      @content;
+    }
+  }
+}
+
+@mixin focus {
+  &.focus-visible:focus {
+    @content;
+  }
+}
+
+@mixin active {
+  &.focus-visible:active {
+    @content;
+  }
+}
+
+@mixin hover-focus {
+  @media (hover: hover) {
+    &:hover:not(.focus-visible) {
+      @content;
+    }
+  }
+
+  &.focus-visible:focus {
+    @content;
+  }
+}
+
+// Desktop first
+
+@mixin vp-1919 {
+  @media (max-width: (variables.$vp-1920 - 1px)) {
+    @content;
+  }
+}
+
+@mixin vp-1439 {
+  @media (max-width: (variables.$vp-1440 - 1px)) {
+    @content;
+  }
+}
+
+@mixin vp-1279 {
+  @media (max-width: (variables.$vp-1280 - 1px)) {
+    @content;
+  }
+}
+
+@mixin vp-1023 {
+  @media (max-width: (variables.$vp-1024 - 1px)) {
+    @content;
+  }
+}
+
+@mixin vp-767 {
+  @media (max-width: (variables.$vp-768 - 1px)) {
+    @content;
+  }
+}
+
+@mixin vp-374 {
+  @media (max-width: (variables.$vp-375 - 1px)) {
+    @content;
+  }
+}
+
+// Mobile first
+
+// @mixin vp-375 {
+//   @media (min-width: $vp-375) {
+//     @content;
+//   }
+// }
+
+// @mixin vp-768 {
+//   @media (min-width: $vp-768) {
+//     @content;
+//   }
+// }
+
+// @mixin vp-1024 {
+//   @media (min-width: $vp-1024) {
+//     @content;
+//   }
+// }
+
+// @mixin vp-1280 {
+//   @media (min-width: $vp-1280) {
+//     @content;
+//   }
+// }
+
+// @mixin vp-1440 {
+//   @media (min-width: $vp-1440) {
+//     @content;
+//   }
+// }
+
+// @mixin vp-1920 {
+//   @media (min-width: $vp-1920) {
+//     @content;
+//   }
+// }
+
+// ---------------------------------
+
+// не нужно добавлять свои миксины для ресета списков, обнуления кнопок и прочие
+// этим вы усложняете работу команды, проверку вашего кода и будущую поддержку проекта
+
+
+
+// Миксин для адаптивного размера шрифта при изменении вьюпорта от max к min (Desktop first)
+// $min-font-size: минимальный размер шрифта (например, 16px) при $min-viewport-width
+// $max-font-size: максимальный размер шрифта (например, 24px) при $max-viewport-width
+// $min-viewport-width: минимальная ширина вьюпорта (например, 320px)
+// $max-viewport-width: максимальная ширина вьюпорта (например, 1200px)
+@mixin fluid-font-reverse($min-font-size, $max-font-size, $min-viewport-width, $max-viewport-width) {
+  // Используем те же точки, но clamp будет работать наоборот
+  $slope: math.div($max-font-size - $min-font-size, $max-viewport-width - $min-viewport-width);
+  $y-intercept: $min-font-size - $slope * $min-viewport-width;
+  $fluid-value: calc(#{$y-intercept} + #{$slope * 100}vw);
+
+  // Инвертируем min/max в clamp для режима desktop first - ОТКАТЫВАЕМ
+  font-size: clamp(#{$min-font-size}, #{$fluid-value}, #{$max-font-size});
+}
+
+// Миксин для адаптивного значения margin
+// $min-margin: минимальное значение margin
+// $max-margin: максимальное значение margin
+// $min-viewport-width: минимальная ширина вьюпорта
+// $max-viewport-width: максимальная ширина вьюпорта
+@mixin fluid-margin-bottom($min-margin, $max-margin, $min-viewport-width, $max-viewport-width) {
+  $slope: math.div($max-margin - $min-margin, $max-viewport-width - $min-viewport-width);
+  $y-intercept: $min-margin - $slope * $min-viewport-width;
+  $fluid-value: calc(#{$y-intercept} + #{$slope * 100}vw);
+
+  margin-bottom: clamp(#{$min-margin}, #{$fluid-value}, #{$max-margin});
+}
+
+@mixin fluid-size-container($min-size, $max-size, $min-viewport-width, $max-viewport-width) {
+  $slope: math.div($max-size - $min-size, $max-viewport-width - $min-viewport-width);
+  $y-intercept: $min-size - $slope * $min-viewport-width;
+  $fluid-value: calc(#{$y-intercept} + #{$slope * 100}vw);
+
+  padding-left: clamp(#{$min-size}, #{$fluid-value}, #{$max-size});
+  padding-right: clamp(#{$min-size}, #{$fluid-value}, #{$max-size});
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+@mixin fluid-size-height($min-size, $max-size, $min-viewport-width, $max-viewport-width) {
+  $slope: math.div($max-size - $min-size, $max-viewport-width - $min-viewport-width);
+  $y-intercept: $min-size - $slope * $min-viewport-width;
+  $fluid-value: calc(#{$y-intercept} + #{$slope * 100}vw);
+
+  height: clamp(#{$min-size}, #{$fluid-value}, #{$max-size});
+}
+
+@mixin fluid-padding-top($min-size, $max-size, $min-viewport-width, $max-viewport-width) {
+  $slope: math.div($max-size - $min-size, $max-viewport-width - $min-viewport-width);
+  $y-intercept: $min-size - $slope * $min-viewport-width;
+  $fluid-value: calc(#{$y-intercept} + #{$slope * 100}vw);
+
+  padding-top: clamp(#{$min-size}, #{$fluid-value}, #{$max-size});
+}
+
+@mixin fluid-padding-bottom($min-size, $max-size, $min-viewport-width, $max-viewport-width) {
+  $slope: math.div($max-size - $min-size, $max-viewport-width - $min-viewport-width);
+  $y-intercept: $min-size - $slope * $min-viewport-width;
+  $fluid-value: calc(#{$y-intercept} + #{$slope * 100}vw);
+
+  padding-bottom: clamp(#{$min-size}, #{$fluid-value}, #{$max-size});
+}

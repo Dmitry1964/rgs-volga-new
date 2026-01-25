@@ -1,0 +1,21 @@
+@use '/src/styles/mixins.scss';
+
+.container {
+  width: 100%;
+  min-height: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 40px;
+
+  @include mixins.vp-1279 {
+    padding: 0 32px;
+  }
+
+  @include mixins.vp-1023 {
+    padding: 0 24px;
+  }
+
+  @include mixins.vp-767 {
+    padding: 0 16px;
+  }
+}
